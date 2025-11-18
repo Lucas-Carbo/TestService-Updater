@@ -25,6 +25,14 @@ namespace TestingWindowsService
                 })
                 .Build();
 
+            Console.WriteLine("═══════════════════════════════════════════════════════════════");
+            Console.WriteLine("         TestingWindowsService v0.3.4");
+            Console.WriteLine("═══════════════════════════════════════════════════════════════");
+            Console.WriteLine($"Iniciado: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+            Console.WriteLine($"Directorio: {AppDomain.CurrentDomain.BaseDirectory}");
+            Console.WriteLine($"Ambiente: {(args.Contains("--development") ? "Development" : "Production")}");
+            Console.WriteLine("═══════════════════════════════════════════════════════════════");
+
             host.Run();
         }
     }
@@ -47,7 +55,7 @@ namespace TestingWindowsService
     {
         private readonly string _categoryName;
         private static readonly string _logDir = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
             "TestingWindowsService"
         );
         private static readonly string _logFilePath = Path.Combine(_logDir, "service.log");
@@ -89,24 +97,39 @@ namespace TestingWindowsService
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("Servicio iniciado");
+            _logger.LogInformation("╔════════════════════════════════════════════════════════════════╗");
+            _logger.LogInformation("║ Servicio de Monitoreo Iniciado Correctamente                    ║");
+            _logger.LogInformation("║ Logs guardados en: C:\\ProgramData\\TestingWindowsService\\       ║");
+            _logger.LogInformation("║ Intervalo de monitoreo: 30 segundos                             ║");
+            _logger.LogInformation("╚════════════════════════════════════════════════════════════════╝");
 
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
                     _eventCount++;
-                    _logger.LogInformation($"[Evento #{_eventCount}] Servicio monitorando...");
+                    var timestamp = DateTime.Now;
+                    var uptime = GC.GetTotalMemory(false) / 1024 / 1024; // MB
+                    
+                    _logger.LogInformation($"┌─ EVENTO #{_eventCount:D5} ─────────────────────────────────────────┐");
+                    _logger.LogInformation($"│ Timestamp: {timestamp:yyyy-MM-dd HH:mm:ss}");
+                    _logger.LogInformation($"│ Estado: Servicio monitorando activamente");
+                    _logger.LogInformation($"│ Memoria: {uptime} MB");
+                    _logger.LogInformation($"└─────────────────────────────────────────────────────────────────┘");
+                    
                     await Task.Delay(30000, stoppingToken); // 30 segundos
                 }
                 catch (OperationCanceledException)
                 {
-                    _logger.LogInformation("Servicio detenido");
+                    _logger.LogInformation("╔════════════════════════════════════════════════════════════════╗");
+                    _logger.LogInformation("║ Servicio detenido correctamente                                ║");
+                    _logger.LogInformation($"║ Total de eventos procesados: {_eventCount}                                ║");
+                    _logger.LogInformation("╚════════════════════════════════════════════════════════════════╝");
                     break;
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error en el servicio");
+                    _logger.LogError(ex, "❌ Error en el servicio");
                 }
             }
         }

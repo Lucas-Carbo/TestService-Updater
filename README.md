@@ -47,12 +47,12 @@ sc.exe delete TestingWindowsService
 
 Los logs se guardan en:
 ```
-%APPDATA%\TestingWindowsService\service.log
+C:\ProgramData\TestingWindowsService\service.log
 ```
 
-Normalmente:
-```
-C:\Users\[NombreUsuario]\AppData\Roaming\TestingWindowsService\service.log
+Puedes verlos con:
+```powershell
+Get-Content "C:\ProgramData\TestingWindowsService\service.log" -Wait
 ```
 
 ## Crear una Release en GitHub

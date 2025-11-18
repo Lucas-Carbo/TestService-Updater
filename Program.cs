@@ -27,7 +27,7 @@ namespace TestingWindowsService
                 .Build();
 
             Console.WriteLine("═══════════════════════════════════════════════════════════════");
-            Console.WriteLine("         TestingWindowsService v0.3.5");
+            Console.WriteLine("         TestingWindowsService v0.4.0");
             Console.WriteLine("═══════════════════════════════════════════════════════════════");
             Console.WriteLine($"Iniciado: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
             Console.WriteLine($"Directorio: {AppDomain.CurrentDomain.BaseDirectory}");
